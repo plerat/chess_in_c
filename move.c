@@ -7,6 +7,9 @@
 #include "piece.h"
 #include <stdio.h>
 
+
+
+
 _Bool isPiece(Piece **board, int col, int row)
 {
     return board[col][row] != EMPTY;
@@ -29,22 +32,13 @@ int setCase(Piece **board, int col, int row, Piece piece) {
 
 //   Piece movement
 int whitePawnMove(Piece **board, int col, int row, int nextCol, int nextRow) {
-    if ( row == 1 ) {
         setCase(board,col,row,EMPTY);
         return setCase(board,nextCol,nextRow,WHITE_PAWN);
-
-    } else {
-
-    }
 }
 
 int blackPawnMove(Piece **board, int col, int row, int nextCol, int nextRow){
-    if ( row == 6 ) {
-
-    } else {
-
-    }
-
+        setCase(board,col,row,EMPTY);
+        return setCase(board,nextCol,nextRow,BLACK_PAWN);
 }
 
 _Bool isLegalMove(Piece **board, int col, int row, int nextCol, int nextRow)
@@ -85,14 +79,11 @@ _Bool isLegalMove(Piece **board, int col, int row, int nextCol, int nextRow)
         case BLACK_PAWN:
             if (isPiece(board, nextCol, nextRow))
             {
-                if (!(nextRow == row - 1 && (nextCol == col + 1 || nextCol == col - 1)))
+                if (!(nextRow == row - 1 && (nextCol == col - 1 || nextCol == col + 1)))
                 {
                     return 0;
                 }
-                else
-                {
-                    return 1;
-                }
+                return 1;
             }
         if (col != nextCol)
         {
@@ -102,11 +93,14 @@ _Bool isLegalMove(Piece **board, int col, int row, int nextCol, int nextRow)
         {
             return 0;
         }
-        if (row == 6 && nextRow - row > 2 || row == 2 && isPiece(board, col, nextRow + 1))
+        if (row == 6 && row - nextRow > 2 )
         {
             return 0;
         }
-        if (nextRow - row != 1)
+        if (row == 6 && nextRow == 4 && isPiece(board, nextCol, nextRow + 1)) {
+            return 0;
+        }
+        if (row == 6 && row - nextRow != 1 && row - nextRow != 2 )
         {
             return 0;
         }
