@@ -3,12 +3,20 @@
 //
 
 #include "move.h"
-#include <stdbool.h>
 #include "piece.h"
 #include <stdio.h>
 
-
-
+Point askCoord() {
+    printf("\n coordonnée ciblée (col row) :\n");
+    int row, col;
+    scanf("%d %d", &row, &col);
+    Point coord = {row-1, col-1};
+    while (!(coord.row <8 && coord.col <8 && coord.row >=0 && coord.col >=0)) {
+        printf("\n coordonnée invalide, veuillez réessayer\n");
+        coord = askCoord();
+    }
+    return coord;
+}
 
 _Bool isPiece(Piece **board, int col, int row)
 {
