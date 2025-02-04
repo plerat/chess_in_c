@@ -205,6 +205,55 @@ _Bool isLegalMove(Piece **board, int col, int row, int nextCol, int nextRow)
                 return 1;
             }
 
+
+        return 1;
+
+        case WHITE_BISHOP:
+        case BLACK_BISHOP:
+            if (getPiece(board, col,row) == WHITE_BISHOP && getPiece(board, nextCol, nextRow) < BLACK_PAWN && getPiece(board, nextCol, nextRow) > EMPTY ){
+                printf("terfs");
+                return 0;
+            }
+            if (getPiece(board, col,row) == BLACK_BISHOP && getPiece(board, nextCol, nextRow) >= BLACK_PAWN){
+                return 0;
+            }
+            if (row == nextRow || col == nextCol) { //if move as rook or stay still
+                return 0;
+            }
+            if (!(row - nextRow == col - nextCol || row - nextRow == -(col-nextCol))) { //if not diagonal
+                return 0;
+            }
+            if (row > nextRow && col > nextCol) { //diagonal up right
+                for (int i = 0 ; i < row-nextRow -1 ; i++) {
+                    if (isPiece(board, row+i, col+i) != EMPTY) {
+                        return 0;
+                    }
+                }
+            }
+            if (row > nextRow && col < nextCol) { //diagonal up left
+                for (int i = 0 ; i < row-nextRow -1; i++) {
+                    if (isPiece(board, row+i, col-i) != EMPTY) {
+                        return 0;
+                    }
+                }
+            }
+            if (row < nextRow && col > nextCol) { //diagonal down right
+                for (int i = 0 ; i < row-nextRow -1 ; i++) {
+                    if (isPiece(board, row-i, col+i) != EMPTY) {
+                        return 0;
+                    }
+                }
+            }
+            if (row < nextRow && col < nextCol) { //diagonal down left
+                for (int i = 0 ; i < row-nextRow -1 ; i++) {
+                    if (isPiece(board, row-i, col-i)!= EMPTY) {
+                        return 0;
+                    }
+                }
+            }
+
+        return 1;
+
         default:
             return 0;
     }
