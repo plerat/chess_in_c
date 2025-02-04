@@ -6,6 +6,12 @@
 #define MOVE_H
 #include "piece.h"
 
+typedef struct {
+    int col;
+    int row;
+} Point;
+
+Point askUser();
 int* askCoords(int col, int row );
 _Bool isPiece(Piece** board, int col, int row);
 int getPiece(Piece** board, int col, int row);
