@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 Point askCoord() {
-    printf("\n coordonnée ciblée (col row) :\n");
+    printf("\n (col row) :\n");
     int row, col;
     scanf("%d %d", &row, &col);
     Point coord = {row-1, col-1};
@@ -39,22 +39,11 @@ int setCase(Piece **board, int col, int row, Piece piece) {
 }
 
 //   Piece movement
-int whitePawnMove(Piece **board, int col, int row, int nextCol, int nextRow) {
-        setCase(board,col,row,EMPTY);
-        return setCase(board,nextCol,nextRow,WHITE_PAWN);
-}
-
-int whiteRookMove(Piece **board, int col, int row, int nextCol, int nextRow) {
+int move(Piece **board, int col, int row, int nextCol, int nextRow) {
+    Piece piece = getPiece(board, col, row);
     setCase(board,col,row,EMPTY);
-    return setCase(board,nextCol,nextRow,WHITE_ROOK);
+    return setCase(board, nextCol, nextRow, piece);
 }
-
-int blackPawnMove(Piece **board, int col, int row, int nextCol, int nextRow){
-        setCase(board,col,row,EMPTY);
-        return setCase(board,nextCol,nextRow,BLACK_PAWN);
-}
-
-
 
 _Bool isLegalMove(Piece **board, int col, int row, int nextCol, int nextRow)
 {
