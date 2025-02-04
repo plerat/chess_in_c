@@ -25,7 +25,7 @@ _Bool isPiece(Piece **board, int col, int row)
 
 int getPiece(Piece **board, int col, int row)
 {
-    if (row > 0 || col > 0 || row < 8 || col < 8)
+    if (row >= 0 && col >= 0 && row < 8 && col < 8)
     {
         return board[col][row];
     }
