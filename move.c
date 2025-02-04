@@ -32,10 +32,7 @@ _Bool isLegalMove( int row, int col, int nextRow, int nextCol, Piece **board)
                 {
                     return 0;
                 }
-                else
-                {
                     return 1;
-                }
             }
         if (col != nextCol)
         {
@@ -45,7 +42,7 @@ _Bool isLegalMove( int row, int col, int nextRow, int nextCol, Piece **board)
         {
             return 0;
         }
-        if (row == 2 && nextRow - row > 2 || row == 2 && isPiece(board, nextRow - 1, col))
+        if (row == 1 && nextRow - row > 2 || row == 2 && isPiece(board, nextRow - 1, col))
         {
             return 0;
         }
@@ -76,7 +73,7 @@ _Bool isLegalMove( int row, int col, int nextRow, int nextCol, Piece **board)
         {
             return 0;
         }
-        if (row == 7 && nextRow - row > 2 || row == 2 && isPiece(board, nextRow + 1, col))
+        if (row == 6 && nextRow - row > 2 || row == 2 && isPiece(board, nextRow + 1, col))
         {
             return 0;
         }

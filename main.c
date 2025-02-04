@@ -1,4 +1,6 @@
 
+#include <stdio.h>
+
 #include "piece.h"
 #include "board.h"
 #include "move.h"
@@ -7,8 +9,11 @@ int main() {
     Piece **board = generateEmptyBoard();
     resetBoardPiece(board);
     displayBoard(board);
-    isLegalMove(2,2,4,2,board);
-    whitePawnMove(2,2,4,2,board);
+   //if ( isLegalMove(1,1,3,1,board)) {
+        whitePawnMove(1,1,3,1,board);
+  // } else {
+      // printf("Illegal move\n");
+   //}
 
 
     displayBoard(board);

@@ -37,16 +37,15 @@ char pieceToString(Piece piece) {
 
 
 void whitePawnMove(int row, int col,int nextRow, int nextCol, Piece **board) {
-    if ( row == 2 ) {
-        printf("ROW == 2");
-        board[row][col] = EMPTY;
-        board[nextRow][nextCol] = WHITE_PAWN;
+    if ( row == 1 ) {
+        board[col][row] = 20;
+        board[nextCol][nextRow] = 40;
     } else {
 
     }
 }
 void blackPawnMove(int row, int col, int nextRow, int nextCol) {
-    if ( row == 7 ) {
+    if ( row == 6 ) {
 
     } else {
 
