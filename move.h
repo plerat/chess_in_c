@@ -6,11 +6,10 @@
 #define MOVE_H
 #include "piece.h"
 
-int* askCoords(int row, int col);
-_Bool isPiece(Piece **board, int row, int col);
-int getPiece(Piece **board, int row, int col);
-void move(int piece, int row, int col);
-int attack(int piece,int row, int col);
-_Bool isLegalMove(int row, int col, int nextRow, int nextCol, Piece **board);
+int* askCoords(int col, int row );
+_Bool isPiece(Piece** board, int col, int row);
+int getPiece(Piece** board, int col, int row);
+int setCase(Piece** board, int col, int row, Piece piece);
+_Bool isLegalMove(Piece** board, int col, int row, int nextCol, int nextRow);
 
 #endif // MOVE_H

@@ -9,11 +9,12 @@ int main() {
     Piece **board = generateEmptyBoard();
     resetBoardPiece(board);
     displayBoard(board);
-   //if ( isLegalMove(1,1,3,1,board)) {
-        whitePawnMove(1,1,3,1,board);
-  // } else {
-      // printf("Illegal move\n");
-   //}
+   if (isLegalMove(board, 1, 1, 2, 2)) {
+        int test = whitePawnMove(board, 1, 1, 2, 2);
+       printf("%d",test);
+   } else {
+      printf("Illegal move\n");
+   }
 
 
     displayBoard(board);

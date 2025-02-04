@@ -1,7 +1,4 @@
 #include "piece.h"
-#include <stdio.h>
-#include <stdbool.h>
-
 
 char pieceToString(Piece piece) {
     switch (piece) {
@@ -35,20 +32,3 @@ char pieceToString(Piece piece) {
     }
 };
 
-
-void whitePawnMove(int row, int col,int nextRow, int nextCol, Piece **board) {
-    if ( row == 1 ) {
-        board[col][row] = 20;
-        board[nextCol][nextRow] = 40;
-    } else {
-
-    }
-}
-void blackPawnMove(int row, int col, int nextRow, int nextCol) {
-    if ( row == 6 ) {
-
-    } else {
-
-    }
-
-}

@@ -23,6 +23,6 @@ typedef enum {
 } Piece;
 char pieceToString(Piece piece);
 
-void whitePawnMove(int row, int col,int nextRow, int nextCol, Piece** board);
-void blackPawnMove(int row, int col,int nextRow, int nextCol);
+int whitePawnMove(Piece **board, int col, int row, int nextCol, int nextRow);
+int blackPawnMove(Piece **board, int col, int row, int nextCol, int nextRow);
 #endif //PIECE_H
