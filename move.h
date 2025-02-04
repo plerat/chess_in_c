@@ -11,7 +11,7 @@ typedef struct {
     int row;
 } Point;
 
-Point askUser();
+Point askCoord();
 int* askCoords(int col, int row );
 _Bool isPiece(Piece** board, int col, int row);
 int getPiece(Piece** board, int col, int row);

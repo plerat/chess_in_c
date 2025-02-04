@@ -6,14 +6,14 @@
 #include "piece.h"
 #include <stdio.h>
 
-Point askUser() {
+Point askCoord() {
     printf("\n coordonnée ciblée (col row) :\n");
     int row, col;
     scanf("%d %d", &row, &col);
     Point coord = {row-1, col-1};
     while (!(coord.row <8 && coord.col <8 && coord.row >=0 && coord.col >=0)) {
         printf("\n coordonnée invalide, veuillez réessayer\n");
-        coord = askUser();
+        coord = askCoord();
     }
     return coord;
 }

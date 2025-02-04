@@ -26,7 +26,7 @@ int main() {
 
     displayBoard(board);
     deleteBoard(board);
-    Point coord = askUser();
+    Point coord = askCoord();
     printf("%d %d",coord.col, coord.row);
 
 
