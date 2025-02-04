@@ -36,10 +36,17 @@ int whitePawnMove(Piece **board, int col, int row, int nextCol, int nextRow) {
         return setCase(board,nextCol,nextRow,WHITE_PAWN);
 }
 
+int whiteRookMove(Piece **board, int col, int row, int nextCol, int nextRow) {
+    setCase(board,col,row,EMPTY);
+    return setCase(board,nextCol,nextRow,WHITE_ROOK);
+}
+
 int blackPawnMove(Piece **board, int col, int row, int nextCol, int nextRow){
         setCase(board,col,row,EMPTY);
         return setCase(board,nextCol,nextRow,BLACK_PAWN);
 }
+
+
 
 _Bool isLegalMove(Piece **board, int col, int row, int nextCol, int nextRow)
 {
@@ -85,27 +92,121 @@ _Bool isLegalMove(Piece **board, int col, int row, int nextCol, int nextRow)
                 }
                 return 1;
             }
-        if (col != nextCol)
-        {
-            return 0;
-        }
-        if (nextRow >= row)
-        {
-            return 0;
-        }
-        if (row == 6 && row - nextRow > 2 )
-        {
-            return 0;
-        }
-        if (row == 6 && nextRow == 4 && isPiece(board, nextCol, nextRow + 1)) {
-            return 0;
-        }
-        if (row == 6 && row - nextRow != 1 && row - nextRow != 2 )
-        {
-            return 0;
-        }
+            if (col != nextCol)
+            {
+                return 0;
+            }
+            if (nextRow >= row)
+            {
+                return 0;
+            }
+            if (row == 6 && row - nextRow > 2 )
+            {
+                return 0;
+            }
+            if (row == 6 && nextRow == 4 && isPiece(board, nextCol, nextRow + 1)) {
+                return 0;
+            }
+            if (row == 6 && row - nextRow != 1 && row - nextRow != 2 )
+            {
+                return 0;
+            }
+            return 1;
 
-        return 1;
+        case WHITE_ROOK:
+        case BLACK_ROOK:
+
+            if (getPiece(board, col, row) == WHITE_ROOK) {
+                if (getPiece(board, nextCol, nextRow > EMPTY)  && getPiece(board, nextCol, nextRow) <= WHITE_ROOK) {
+                    return 0;
+                }
+            }
+
+            if (getPiece(board, col, row) == BLACK_ROOK) {
+                if (getPiece(board, nextCol, nextRow >= BLACK_ROOK)) {
+                    return 0;
+                }
+            }
+            // vertical asc
+            if (row < nextRow && col == nextCol) {
+                for (row; row < nextRow; row++) {
+                    if (isPiece(board, col, row)) {
+                        return 0;
+                    }
+                }
+                return 1;
+            }
+            // vertical desc
+            if (row > nextRow && col == nextCol) {
+                for (row; row > nextRow; row--) {
+                    if (isPiece(board, col, row)) {
+                        return 0;
+                    }
+                }
+                return 1;
+            }
+            // horizontal right
+            if (row == nextRow && col < nextCol) {
+                for (col; col < nextCol; col++) {
+                    if (isPiece(board, col, row)) {
+                        return 0;
+                    }
+                }
+                return 1;
+            }
+            // horizontal left
+            if (row == nextRow && col > nextCol) {
+                for (col; col > nextCol; col--) {
+                    if (isPiece(board, col, row)) {
+                        return 0;
+                    }
+                }
+                return 1;
+            }
+
+        case WHITE_KNIGHT:
+        case BLACK_KNIGHT:
+            if (getPiece(board, col, row) == WHITE_KNIGHT)
+                if (getPiece(board, nextCol, nextRow) <= WHITE_ROOK && getPiece(board, nextCol, nextRow) > EMPTY) {
+                    return 0;
+                }
+            if (getPiece(board, col, row) == BLACK_KNIGHT) {
+                if (getPiece(board, nextCol, nextRow >= BLACK_PAWN)) {
+                    return 0;
+                }
+            }
+
+            if (col + 1 == nextCol && row + 2 == nextRow) {
+                return 1;
+            }
+
+            if (col + 2 == nextCol && row + 1 == nextRow) {
+                return 1;
+            }
+
+            if (col + 2 == nextCol && row - 1 == nextRow) {
+                return 1;
+            }
+
+            if (col + 1 == nextCol && row - 2 == nextRow) {
+                return 1;
+            }
+
+            if (col - 1 == nextCol && row - 2 == nextRow) {
+                return 1;
+            }
+
+            if (col - 2 == nextCol && row - 1 == nextRow) {
+                return 1;
+            }
+
+            if (col - 2 == nextCol && row + 1 == nextRow) {
+                return 1;
+            }
+
+            if (col - 1 == nextCol && row + 2 == nextRow) {
+                return 1;
+            }
 
         default:
             return 0;
