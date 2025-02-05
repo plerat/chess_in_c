@@ -41,7 +41,7 @@ _Bool isPieceWhite(Piece **board, int nextCol, int nextRow) {
 }
 
 _Bool isPieceBlack(Piece **board, int nextCol, int nextRow) {
-    if (getPiece(board, nextCol, nextRow >= BLACK_PAWN)) {
+    if (getPiece(board, nextCol, nextRow) >= BLACK_PAWN) {
         return 1;
     } else {
         return 0;
