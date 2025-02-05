@@ -4,6 +4,7 @@
 #include "piece.h"
 #include "board.h"
 #include "move.h"
+#include "wincondition.h"
 
 int main() {
     Piece **board = generateEmptyBoard();
@@ -24,6 +25,7 @@ int main() {
         } else {
             printf("\nIllegal move-whitepawnmove\n");
         }
+        checkWin(1, board);
         displayBoard(board);
     }
     deleteBoard(board);
