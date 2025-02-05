@@ -1,17 +1,18 @@
 //
 // Created by User on 03/02/2025.
 //
-
 #include "move.h"
 #include "piece.h"
 #include <stdio.h>
 
 Point askCoord() {
-    printf("\n (col row) :\n");
-    int row, col;
-    scanf("%d %d", &row, &col);
-    Point coord = {row-1, col-1};
-    while (!(coord.row <8 && coord.col <8 && coord.row >=0 && coord.col >=0)) {
+    int row= 0;
+    char col = 0;
+    scanf("%c%d", &col, &row);
+    Point coord = { col, row-1};
+    if (coord.col < 97) coord.col += 32;
+    coord.col = coord.col % 97;
+    while (!(coord.col <8 && coord.col >=0  && coord.row <=8 &&  coord.row >= 0 )) {
         printf("\n coordonnée invalide, veuillez réessayer\n");
         coord = askCoord();
     }
@@ -37,6 +38,7 @@ _Bool isPieceWhite(Piece **board, int nextCol, int nextRow) {
         return 0;
     }
 }
+
 _Bool isPieceBlack(Piece **board, int nextCol, int nextRow) {
     if (getPiece(board, nextCol, nextRow) >= BLACK_PAWN) {
         return 1;
