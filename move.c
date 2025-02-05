@@ -32,6 +32,22 @@ int getPiece(Piece **board, int col, int row)
     return EMPTY;
 }
 
+_Bool isPieceWhite(Piece **board, int nextCol, int nextRow) {
+    if (getPiece(board, nextCol, nextRow) <= WHITE_ROOK && getPiece(board, nextCol, nextRow) > EMPTY) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+_Bool isPieceBlack(Piece **board, int nextCol, int nextRow) {
+    if (getPiece(board, nextCol, nextRow >= BLACK_PAWN)) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 int setCase(Piece **board, int col, int row, Piece piece) {
     int aimedCase = getPiece(board, col, row);
     board[col][row] = piece;
@@ -44,6 +60,8 @@ int move(Piece **board, int col, int row, int nextCol, int nextRow) {
     setCase(board,col,row,EMPTY);
     return setCase(board, nextCol, nextRow, piece);
 }
+
+
 
 _Bool isLegalMove(Piece **board, int col, int row, int nextCol, int nextRow)
 {
@@ -112,22 +130,26 @@ _Bool isLegalMove(Piece **board, int col, int row, int nextCol, int nextRow)
 
         case WHITE_ROOK:
         case BLACK_ROOK:
-
             if (getPiece(board, col, row) == WHITE_ROOK) {
-                if (getPiece(board, nextCol, nextRow > EMPTY)  && getPiece(board, nextCol, nextRow) <= WHITE_ROOK) {
+                if (isPieceWhite(board, nextCol, nextRow)) {
                     return 0;
                 }
             }
 
             if (getPiece(board, col, row) == BLACK_ROOK) {
-                if (getPiece(board, nextCol, nextRow >= BLACK_ROOK)) {
+                if (isPieceBlack(board, nextCol, nextRow)) {
                     return 0;
                 }
             }
             // vertical asc
             if (row < nextRow && col == nextCol) {
-                for (row; row < nextRow; row++) {
-                    if (isPiece(board, col, row)) {
+                printf("je suis dans le premier if ");
+                // - 1 pour ne pas check la case d'arrivée car ça a déjà été fait
+                for (; row < nextRow -1; row++) {
+                    printf("je suis dans la boucle");
+                    // Ajout de row + 1 pour que la pièce ne se check pas elle-même
+                    if (isPiece(board, col, row + 1)) {
+                        printf("je détecte une pièce");
                         return 0;
                     }
                 }
@@ -135,8 +157,8 @@ _Bool isLegalMove(Piece **board, int col, int row, int nextCol, int nextRow)
             }
             // vertical desc
             if (row > nextRow && col == nextCol) {
-                for (row; row > nextRow; row--) {
-                    if (isPiece(board, col, row)) {
+                for (; row > nextRow + 1; row--) {
+                    if (isPiece(board, col, row - 1)) {
                         return 0;
                     }
                 }
@@ -144,8 +166,8 @@ _Bool isLegalMove(Piece **board, int col, int row, int nextCol, int nextRow)
             }
             // horizontal right
             if (row == nextRow && col < nextCol) {
-                for (col; col < nextCol; col++) {
-                    if (isPiece(board, col, row)) {
+                for (; col < nextCol - 1; col++) {
+                    if (isPiece(board, col + 1, row)) {
                         return 0;
                     }
                 }
@@ -153,8 +175,8 @@ _Bool isLegalMove(Piece **board, int col, int row, int nextCol, int nextRow)
             }
             // horizontal left
             if (row == nextRow && col > nextCol) {
-                for (col; col > nextCol; col--) {
-                    if (isPiece(board, col, row)) {
+                for (; col > nextCol + 1; col--) {
+                    if (isPiece(board, col - 1, row)) {
                         return 0;
                     }
                 }
@@ -163,12 +185,14 @@ _Bool isLegalMove(Piece **board, int col, int row, int nextCol, int nextRow)
 
         case WHITE_KNIGHT:
         case BLACK_KNIGHT:
-            if (getPiece(board, col, row) == WHITE_KNIGHT)
-                if (getPiece(board, nextCol, nextRow) <= WHITE_ROOK && getPiece(board, nextCol, nextRow) > EMPTY) {
+            if (getPiece(board, col, row) == WHITE_KNIGHT) {
+                if (isPieceWhite(board, nextCol, nextRow)) {
                     return 0;
                 }
+            }
+
             if (getPiece(board, col, row) == BLACK_KNIGHT) {
-                if (getPiece(board, nextCol, nextRow >= BLACK_PAWN)) {
+                if (isPieceBlack(board, nextCol, nextRow)) {
                     return 0;
                 }
             }
@@ -206,12 +230,11 @@ _Bool isLegalMove(Piece **board, int col, int row, int nextCol, int nextRow)
             }
 
 
-        return 1;
+        return 0;
 
         case WHITE_BISHOP:
         case BLACK_BISHOP:
             if (getPiece(board, col,row) == WHITE_BISHOP && getPiece(board, nextCol, nextRow) < BLACK_PAWN && getPiece(board, nextCol, nextRow) > EMPTY ){
-                printf("terfs");
                 return 0;
             }
             if (getPiece(board, col,row) == BLACK_BISHOP && getPiece(board, nextCol, nextRow) >= BLACK_PAWN){
@@ -253,6 +276,28 @@ _Bool isLegalMove(Piece **board, int col, int row, int nextCol, int nextRow)
             }
 
         return 1;
+
+        case WHITE_KING:
+        case BLACK_KING:
+            if (getPiece(board, col, row) == WHITE_KING) {
+                if (isPieceWhite(board, nextCol, nextRow)) {
+                    return 0;
+                }
+            }
+
+            if (getPiece(board, col, row) == BLACK_KING) {
+                if (isPieceBlack(board, nextCol, nextRow)) {
+                    return 0;
+                }
+            }
+            if (!((-1 <= col - nextCol && col - nextCol <= 1 ) && (- 1 <= row - nextRow && row - nextRow <= 1))) {
+                return 0;
+            }
+            return 1;
+
+        case WHITE_QUEEN:
+        case BLACK_QUEEN:
+
 
         default:
             return 0;

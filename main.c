@@ -13,7 +13,7 @@ int main() {
     Point coord = {0,0} ;
     while (coord.col < 9) {
         Point nextCoord;
-        printf("piece à move ! \n");
+        printf("piece a move ! \n");
         coord = askCoord();
         printf("tu la mets ou ?\n");
         nextCoord = askCoord();
