@@ -9,4 +9,6 @@ add_executable(chess main.c
         piece.c
         board.h
         move.h
-        piece.h)
+        piece.h
+        wincondition.c
+        wincondition.h)
