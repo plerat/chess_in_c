@@ -23,7 +23,16 @@ Point findKing(_Bool color, Piece** board ) {
     Point invalid = {-1, -1};
     return invalid;
 }
+_Bool isCaseSafe(_Bool color, Piece** board, int col, int row ){ // is case attacked
+    // check all ennemy piece then check if one of them can here
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if (isEnemy(board, color, i, j)){
 
+            }
+        }
+    }
+}
 _Bool checkWin(_Bool player, Piece** board) {
     // On cherche le roi ennemi : donc on inverse la valeur de player (on est joueur blanc, on cherche le roi noir)
     Point king = findKing(!player, board);
