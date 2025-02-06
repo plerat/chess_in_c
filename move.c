@@ -28,6 +28,7 @@ int getPiece(Piece **board, int col, int row) {
     {
         return board[col][row];
     }
+    printf("Should never appear");
     return EMPTY;
 }
 

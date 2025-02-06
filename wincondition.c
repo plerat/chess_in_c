@@ -31,7 +31,23 @@ _Bool checkWin(_Bool player, Piece** board) {
         return 1;
     }
 
-
+    // Est-ce que le roi peut se déplacer ?
+    for (int i = -1; i < 2; i++) {
+        for (int j = -1; j < 2; j++) {
+            if (i == 0 && j == 0) {
+                continue;
+            }
+            if (king.col + i > 8 || king.row + j > 8 || king.col + i < 0 || king.row + j < 0) {
+                continue;
+            }
+            if (!isEnemy(board, king.col, king.row, king.row + j , king.col + i)) {
+                continue;
+            }
+            if (isCaseSafe(king.col + i, king.row + j)) {
+                return 0;
+            }
+        }
+    }
 
     return 0;
 }
