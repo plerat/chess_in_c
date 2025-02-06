@@ -40,10 +40,10 @@ _Bool checkWin(_Bool player, Piece** board) {
             if (king.col + i > 8 || king.row + j > 8 || king.col + i < 0 || king.row + j < 0) {
                 continue;
             }
-            if (!isEnemy(board, king.col, king.row, king.row + j , king.col + i)) {
+            if (!isEnemy(board, player, king.row + j , king.col + i)) {
                 continue;
             }
-            if (isCaseSafe(king.col + i, king.row + j)) {
+            if (isCaseSafe(player, board, king.col + i, king.row + j)) {
                 return 0;
             }
         }

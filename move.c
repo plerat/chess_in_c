@@ -61,11 +61,11 @@ int move(Piece **board, int col, int row, int nextCol, int nextRow) {
     return setCase(board, nextCol, nextRow, piece);
 }
 
-_Bool isEnemy(Piece **board, int col, int row, int nextCol,int nextRow) {
-    if (isPieceWhite(board, col, row) && isPieceWhite(board, nextCol, nextRow)) {
+_Bool isEnemy(Piece **board,_Bool color, int nextCol,int nextRow) {
+    if (color && isPieceWhite(board, nextCol, nextRow)) {
         return 0;
     }
-    if (isPieceBlack(board, col, row) && isPieceBlack(board, nextCol, nextRow)) {
+    if (!color && isPieceBlack(board, nextCol, nextRow)) {
         return 0;
     }
     return 1;
@@ -134,8 +134,8 @@ _Bool blackPawnMove(Piece **board, int col, int row, int nextCol, int nextRow)  
     }
     return 1;
 }
-_Bool bishopMove(Piece** board, int col, int row, int nextCol, int nextRow){
-    if (!isEnemy(board, col, row, nextCol, nextRow)) {
+_Bool bishopMove(Piece** board,_Bool player,  int col, int row, int nextCol, int nextRow){
+    if (!isEnemy(board, player, nextCol, nextRow)) {
         return 0;
     }
 
@@ -176,8 +176,8 @@ _Bool bishopMove(Piece** board, int col, int row, int nextCol, int nextRow){
 
     return 1;
 }
-_Bool rookMove(Piece** board, int col, int row, int nextCol, int nextRow) {
-        if (!isEnemy(board, col, row, nextCol, nextRow)) {
+_Bool rookMove(Piece** board, _Bool player, int col, int row, int nextCol, int nextRow) {
+        if (!isEnemy(board, player, nextCol, nextRow)) {
             return 0;
         }
 
@@ -223,8 +223,8 @@ _Bool rookMove(Piece** board, int col, int row, int nextCol, int nextRow) {
         }
     return 1;
     }
-_Bool knightMove(Piece** board, int col, int row, int nextCol, int nextRow){
-    if (!isEnemy(board, col, row, nextCol, nextRow)) {
+_Bool knightMove(Piece** board, _Bool player, int col, int row, int nextCol, int nextRow){
+    if (!isEnemy(board, player, nextCol, nextRow)) {
         return 0;
     }
 
@@ -263,8 +263,8 @@ _Bool knightMove(Piece** board, int col, int row, int nextCol, int nextRow){
 
     return 0;
 }
-_Bool kingMove(Piece** board, int col, int row, int nextCol, int nextRow){
-    if (!isEnemy(board, col, row, nextCol, nextRow)) {
+_Bool kingMove(Piece** board, _Bool player, int col, int row, int nextCol, int nextRow){
+    if (!isEnemy(board, player, nextCol, nextRow)) {
         return 0;
     }
 
@@ -276,7 +276,11 @@ _Bool kingMove(Piece** board, int col, int row, int nextCol, int nextRow){
 }
 
 
-_Bool isLegalMove(Piece **board, int col, int row, int nextCol, int nextRow) {
+_Bool isLegalMove(Piece **board, _Bool player, int col, int row, int nextCol, int nextRow) {
+    if (isEnemy(board, player, col, row)) {
+        printf("\nYou cannot play enemy pieces");
+        return 0;
+    }
     switch (getPiece(board, col, row)) {
         case WHITE_PAWN:
 
@@ -284,32 +288,32 @@ _Bool isLegalMove(Piece **board, int col, int row, int nextCol, int nextRow) {
 
         case BLACK_PAWN:
 
-            return blackPawnMove(board, col, row, nextCol, nextRow);
+            return blackPawnMove(board, player, col, row, nextCol, nextRow);
 
         case WHITE_ROOK:
         case BLACK_ROOK:
 
-            return rookMove(board, col, row, nextCol, nextRow);
+            return rookMove(board, player, col, row, nextCol, nextRow);
 
         case WHITE_KNIGHT:
         case BLACK_KNIGHT:
 
-            return knightMove(board, col, row, nextCol, nextRow);
+            return knightMove(board, player, col, row, nextCol, nextRow);
 
         case WHITE_BISHOP:
         case BLACK_BISHOP:
 
-            return bishopMove(board,col,row,nextCol,nextRow);
+            return bishopMove(board, player, col,row,nextCol,nextRow);
 
         case WHITE_KING:
         case BLACK_KING:
 
-        return kingMove(board,col,row,nextCol,nextRow);
+        return kingMove(board, player, col,row,nextCol,nextRow);
 
         case WHITE_QUEEN:
         case BLACK_QUEEN:
 
-            return bishopMove(board,col,row,nextCol,nextRow) || rookMove(board, col, row, nextCol, nextRow);
+            return bishopMove(board, player, col,row,nextCol,nextRow) || rookMove(board, player, col, row, nextCol, nextRow);
 
         default:
             return 0;
