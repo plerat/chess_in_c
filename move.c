@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 Point askCoord() {
-    int row= 0;
+    int row = 0;
     char col = 0;
     scanf(" %c%d", &col, &row); // magie du scanf numéro 1: ' ' avant %c pour ignorer les retours à la ligne '\n'
     // while (getchar() != '\n'); // magie du scanf numéro 2: vide le buffer s'il contient des résidues
@@ -295,7 +295,6 @@ _Bool isLegalMove(Piece **board, _Bool player, int col, int row, int nextCol, in
 
         case WHITE_KNIGHT:
         case BLACK_KNIGHT:
-
             return knightMove(board, player, col, row, nextCol, nextRow);
 
         case WHITE_BISHOP:

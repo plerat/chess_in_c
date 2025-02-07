@@ -52,8 +52,8 @@ void displayBoard(Piece **board) {
         printf("%d |", i + 1);
 
         for (int j = 0; j < 8; j++) {
-            //printf(" %c |", pieceToString(board[j][i]));
-            printf(" %d  ", board[j][i]);
+            printf(" %c |", pieceToString(board[j][i]));
+            //printf(" %d  ", board[j][i]);
         }
 
         printf("\n  +---+---+---+---+---+---+---+---+\n");
