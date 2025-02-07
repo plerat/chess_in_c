@@ -1,7 +1,8 @@
-#include <stdio.h>
+#include <stdlib.h>
 #include "wincondition.h"
 #include "move.h"
 #include "piece.h"
+
 
 Point findKing(_Bool color, Piece** board ) {
     for (int i = 0; i < 8; i++) {
@@ -23,41 +24,104 @@ Point findKing(_Bool color, Piece** board ) {
     Point invalid = {-1, -1};
     return invalid;
 }
+
 _Bool isCaseSafe(_Bool color, Piece** board, int col, int row ){ // is case attacked
-    // check all ennemy piece then check if one of them can here
+    // check all ennemy piece then check if one of them can attack here
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             if (isEnemy(board, color, i, j)){
-
+                if (isLegalMove(board, color, i, j, col, row)) {
+                    return 0;
+                }
             }
         }
     }
+    return 1;
 }
-_Bool checkWin(_Bool player, Piece** board) {
-    // On cherche le roi ennemi : donc on inverse la valeur de player (on est joueur blanc, on cherche le roi noir)
-    Point king = findKing(!player, board);
-    if (king.col == -1 || king.row == -1) {
-        return 1;
-    }
 
-    // Est-ce que le roi peut se déplacer ?
+_Bool canKingMove(_Bool player, Piece** board, int col, int row) {
     for (int i = -1; i < 2; i++) {
         for (int j = -1; j < 2; j++) {
             if (i == 0 && j == 0) {
                 continue;
             }
-            if (king.col + i > 8 || king.row + j > 8 || king.col + i < 0 || king.row + j < 0) {
+            if (col + i > 8 || row + j > 8 || col + i < 0 || row + j < 0) {
                 continue;
             }
-            if (!isEnemy(board, player, king.row + j , king.col + i)) {
+            // if same color false if empty
+            if (!isLegalMove(board, player, col, row , col + i, row + j )) {
                 continue;
             }
-            if (isCaseSafe(player, board, king.col + i, king.row + j)) {
-                return 0;
+            //if empty or enemy : check if case can be attacked
+            if (isCaseSafe(player, board, col + i, row + j)) {
+                return 1;
             }
         }
     }
-
     return 0;
 }
 
+_Bool canKnightMove(_Bool player, Piece** board, int col, int row) {
+    for (int i= -2; i <= 2; i++) {
+        for (int j= -2; j <= 2; j++) {
+            if (abs(i)+abs(j) != 3) {
+                continue;
+            }if (isLegalMove(board, player, i, j, col, row)) {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+
+_Bool canPieceMove(_Bool player, Piece** board, int col, int row) {
+    if (getPiece(board,col,row) == WHITE_KNIGHT || getPiece(board,col,row) == BLACK_KNIGHT) {
+        return canKnightMove;
+    }
+
+    for (int i = -1; i < 2; i++) {
+        for (int j = -1; j < 2; j++) {
+            if (i == 0 && j == 0) {
+                continue;
+            }
+            if (col + i > 8 || row + j > 8 || col + i < 0 || row + j < 0) {
+                continue;
+            }
+            if (isLegalMove(board, player, i, j, col, row)) {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+GameStatus checkWin(_Bool player, Piece** board) {
+    // On cherche le roi ennemi : donc on inverse la valeur de player (on est joueur blanc, on cherche le roi noir)
+    Point king = findKing(!player, board);
+    if (king.col == -1 || king.row == -1) {
+        return 1;
+    }
+    if (canKingMove(!player, board, king.col, king.row)) {
+        return 0;
+    }
+    int emptyCase = 0;
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j <8; j++) {
+            if (board[i][j] == EMPTY) {
+                emptyCase++;
+                continue;
+            }
+            if (isEnemy(board,player,i,j) && canPieceMove(player,board,i,j)) {
+                return 0;
+            }
+            if (emptyCase == 62) {
+                return 2;
+            }
+        }
+    }
+   if (isCaseSafe(!player,board,king.col,king.row)) {
+       return 2;
+   }
+    return 0;
+}

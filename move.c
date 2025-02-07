@@ -65,6 +65,7 @@ _Bool isEnemy(Piece **board,_Bool color, int nextCol,int nextRow) {
     if (color && isPieceWhite(board, nextCol, nextRow)) {
         return 0;
     }
+    //!color because if not : black player is 0 so 0 && 1 == 0
     if (!color && isPieceBlack(board, nextCol, nextRow)) {
         return 0;
     }
@@ -73,10 +74,8 @@ _Bool isEnemy(Piece **board,_Bool color, int nextCol,int nextRow) {
 
 //      Check pieces movement function
 _Bool whitePawnMove(Piece **board,int col,int row, int nextCol, int nextRow) {
-    if (isPiece(board, nextCol, nextRow) && isPieceBlack(board, nextCol, nextRow))
-    {
-        if (!(nextRow == row + 1 && (nextCol == col + 1 || nextCol == col - 1)))
-        {
+    if (isPiece(board, nextCol, nextRow) && isPieceBlack(board, nextCol, nextRow)) {
+        if (!(nextRow == row + 1 && (nextCol == col + 1 || nextCol == col - 1))) {
             return 0;
         }
         return 1;
@@ -97,8 +96,7 @@ _Bool whitePawnMove(Piece **board,int col,int row, int nextCol, int nextRow) {
     if (row == 1 && nextRow == 3 && isPiece(board, nextCol, nextRow - 1)) {
         return 0;
     }
-    if (row == 1 && nextRow - row != 1 && nextRow - row != 2 )
-    {
+    if (row == 1 && nextRow - row != 1 && nextRow - row != 2 ) {
         return 0;
     }
 
