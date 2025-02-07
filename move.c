@@ -8,7 +8,8 @@
 Point askCoord() {
     int row= 0;
     char col = 0;
-    scanf("%c%d", &col, &row);
+    scanf(" %c%d", &col, &row); // magie du scanf numéro 1: ' ' avant %c pour ignorer les retours à la ligne '\n'
+    // while (getchar() != '\n'); // magie du scanf numéro 2: vide le buffer s'il contient des résidues
     Point coord = { col, row-1};
     if (coord.col < 97) coord.col += 32;
     coord.col = coord.col % 97;
