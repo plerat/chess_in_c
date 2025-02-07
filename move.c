@@ -28,7 +28,6 @@ int getPiece(Piece **board, int col, int row) {
     {
         return board[col][row];
     }
-    printf("Should never appear");
     return EMPTY;
 }
 
@@ -276,9 +275,9 @@ _Bool kingMove(Piece** board, _Bool player, int col, int row, int nextCol, int n
 
 _Bool isLegalMove(Piece **board, _Bool player, int col, int row, int nextCol, int nextRow) {
     if (isEnemy(board, player, col, row)) {
-        printf("\nYou cannot play enemy pieces");
         return 0;
     }
+
     switch (getPiece(board, col, row)) {
         case WHITE_PAWN:
 

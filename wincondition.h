@@ -7,7 +7,7 @@
 #include "move.h"
 
 typedef enum  {
-    ONGOING,
+    ONGOING = 0,
     WINNING,
     STALEMATE
 } GameStatus;
