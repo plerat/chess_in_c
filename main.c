@@ -15,12 +15,12 @@ int main() {
     GameStatus status = ONGOING;
     while (status == ONGOING) {
         player = !player;
-        printf("piece to move !\n");
-        Point coord  = askCoord();
-        printf("where ?\n");
-        Point nextCoord = askCoord();
         _Bool haveMoveAPiece = 0;
         while (!haveMoveAPiece){
+            printf("piece to move !\n");
+            Point coord = askCoord();
+            printf("where ?\n");
+            Point nextCoord = askCoord();
             if (isLegalMove(board, player, coord.col, coord.row, nextCoord.col, nextCoord.row)) {
                 move(board, coord.col, coord.row, nextCoord.col, nextCoord.row);
                 haveMoveAPiece = 1;
