@@ -29,9 +29,9 @@ _Bool isCaseSafe(_Bool color, Piece** board, int col, int row ){ // is case atta
     // check all ennemy piece then check if one of them can attack here
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
-                if (isLegalMove(board, !color, i, j, col, row)) {
-                    return 0;
-                }
+            if (isLegalMove(board, color, i, j, col, row)) {
+                return 0;
+            }
         }
     }
     return 1;
@@ -40,18 +40,15 @@ _Bool isCaseSafe(_Bool color, Piece** board, int col, int row ){ // is case atta
 _Bool canKingMove(_Bool player, Piece** board, int col, int row) {
     for (int i = -1; i < 2; i++) {
         for (int j = -1; j < 2; j++) {
-            if (col + i > 7 || row + j > 7 || col + i <= 0 || row + j <= 0) {
+            if (col + i > 7 || row + j > 7 || col + i < 0 || row + j < 0) {
                 continue;
             }
             if (i == 0 && j == 0) {
                 continue;
             }
             // if same color false if empty
-            if (!isLegalMove(board, player, col, row , col + i, row + j )) {
-                continue;
-            }
+            if (isLegalMove(board, player, col, row , col + i, row + j ) && isCaseSafe(player, board, col + i, row + j)) {
             //if empty or enemy : check if case can be attacked
-            if (isCaseSafe(player, board, col + i, row + j)) {
                 return 1;
             }
         }
@@ -62,9 +59,12 @@ _Bool canKingMove(_Bool player, Piece** board, int col, int row) {
 _Bool canKnightMove(_Bool player, Piece** board, int col, int row) {
     for (int i= -2; i <= 2; i++) {
         for (int j= -2; j <= 2; j++) {
+            if (col + i > 7 || row + j > 7 || col + i < 0 || row + j < 0) {
+                continue;
+            }
             if (abs(i)+abs(j) != 3) {
                 continue;
-            }if (isLegalMove(board, player, col, row, i, j)) {
+            }if (isLegalMove(board, player, col, row, col + i, row + j)) {
                 return 1;
             }
         }
@@ -76,6 +76,7 @@ _Bool canKnightMove(_Bool player, Piece** board, int col, int row) {
 _Bool canPieceMove(_Bool player, Piece** board, int col, int row) {
     if (getPiece(board,col,row) == WHITE_KNIGHT || getPiece(board,col,row) == BLACK_KNIGHT) {
         return canKnightMove(player, board, col, row);
+
     }
     if (getPiece(board,col,row) == BLACK_KING || getPiece(board,col,row) == WHITE_KING) {
         return 0;
@@ -85,11 +86,11 @@ _Bool canPieceMove(_Bool player, Piece** board, int col, int row) {
             if (i == 0 && j == 0) {
                 continue;
             }
-            if (col + i > 7 || row + j > 7 || col + i <= 0 || row + j <= 0) {
+            if (col + i > 7 || row + j > 7 || col + i < 0 || row + j < 0) {
                 continue;
             }
 
-            return isLegalMove(board, player,  col, row, i, j);
+            return isLegalMove(board, player,  col, row, col + i, row + j);
         }
     }
     return 0;
@@ -112,18 +113,17 @@ GameStatus checkWin(_Bool player, Piece** board) {
                 emptyCase++;
                 continue;
             }
+            if (isEnemy(board,  player,i,j) && canPieceMove(!player,board,i,j)) {
+                return ONGOING;
+            }
             if (emptyCase == 62) {
                 return STALEMATE;
             }
 
-            if (isEnemy(board,  player,i,j) && canPieceMove(!player,board,i,j)) {
-                return ONGOING;
-            }
-            return STALEMATE;
         }
     }
    if (isCaseSafe(!player,board,king.col,king.row)) {
        return STALEMATE;
    }
-    return ONGOING;
+    return WINNING;
 }

@@ -25,11 +25,10 @@ _Bool isPiece(Piece **board, int col, int row) {
 }
 
 int getPiece(Piece **board, int col, int row) {
-    if (row >= 0 && col >= 0 && row < 8 && col < 8)
-    {
-        return board[col][row];
+    if (col > 7 || row > 7 || col < 0 || row < 0) {
+        return 15;
     }
-    return EMPTY;
+    return board[col][row];
 }
 
 _Bool isPieceWhite(Piece **board, int nextCol, int nextRow) {
@@ -143,30 +142,32 @@ _Bool bishopMove(Piece** board,_Bool player,  int col, int row, int nextCol, int
     if (!(row - nextRow == col - nextCol || row - nextRow == -(col-nextCol))) { //if not diagonal
         return 0;
     }
-    if (row > nextRow && col > nextCol) { //diagonal up right
-        for (int i = 0 ; i < row-nextRow -1 ; i++) {
-            if (isPiece(board, row+i, col+i) != EMPTY) {
+    //i = 1 to skip itself and -1 to not check the aimed case
+    if (row > nextRow && col > nextCol) { //diagonal down left
+        for (int i = 1 ; i < row-nextRow -1 ; i++) {
+            if (isPiece(board, col-i, row-i) != EMPTY) {
                 return 0;
             }
         }
     }
-    if (row > nextRow && col < nextCol) { //diagonal up left
-        for (int i = 0 ; i < row-nextRow -1; i++) {
-            if (isPiece(board, row+i, col-i) != EMPTY) {
+    if (row > nextRow && col < nextCol) { //diagonal down right
+        for (int i = 1 ; i < row-nextRow -1; i++) {
+            if (isPiece(board, col+i, row-i) != EMPTY) {
                 return 0;
             }
         }
     }
-    if (row < nextRow && col > nextCol) { //diagonal down right
-        for (int i = 0 ; i < row-nextRow -1 ; i++) {
-            if (isPiece(board, row-i, col+i) != EMPTY) {
+    if (row < nextRow && col > nextCol) { //diagonal up left
+        for (int i = 1 ; i < nextRow-row -1 ; i++) {
+            if (isPiece(board, col-i, row+i) != EMPTY) {
                 return 0;
             }
         }
     }
-    if (row < nextRow && col < nextCol) { //diagonal down left
-        for (int i = 0 ; i < row-nextRow -1 ; i++) {
-            if (isPiece(board, row-i, col-i)!= EMPTY) {
+    if (row < nextRow && col < nextCol) { //diagonal up right
+        for (int i = 1 ; i < nextRow - row - 1 ; i++) {
+
+            if (isPiece(board, col + i, row + i) != EMPTY) {
                 return 0;
             }
         }
@@ -219,7 +220,7 @@ _Bool rookMove(Piece** board, _Bool player, int col, int row, int nextCol, int n
             }
             return 1;
         }
-    return 1;
+    return 0;
     }
 _Bool knightMove(Piece** board, _Bool player, int col, int row, int nextCol, int nextRow){
     if (!isEnemy(board, player, nextCol, nextRow)) {
@@ -273,13 +274,18 @@ _Bool kingMove(Piece** board, _Bool player, int col, int row, int nextCol, int n
     return 1;
 }
 
-
 _Bool isLegalMove(Piece **board, _Bool player, int col, int row, int nextCol, int nextRow) {
+
+    if (col > 7 || row > 7 || col < 0 || row < 0) {
+       return 0;
+    }
+
     if (isEnemy(board, player, col, row)) {
         return 0;
     }
 
     switch (getPiece(board, col, row)) {
+
         case WHITE_PAWN:
 
             return whitePawnMove(board, col, row, nextCol, nextRow);
@@ -295,24 +301,25 @@ _Bool isLegalMove(Piece **board, _Bool player, int col, int row, int nextCol, in
 
         case WHITE_KNIGHT:
         case BLACK_KNIGHT:
+
             return knightMove(board, player, col, row, nextCol, nextRow);
 
         case WHITE_BISHOP:
         case BLACK_BISHOP:
 
-            return bishopMove(board, player, col,row,nextCol,nextRow);
+            return bishopMove(board, player, col, row, nextCol, nextRow);
 
         case WHITE_KING:
         case BLACK_KING:
 
-        return kingMove(board, player, col,row,nextCol,nextRow);
+        return kingMove(board, player, col, row, nextCol, nextRow);
 
         case WHITE_QUEEN:
         case BLACK_QUEEN:
 
-            return bishopMove(board, player, col,row,nextCol,nextRow) || rookMove(board, player, col, row, nextCol, nextRow);
-
+            return bishopMove(board, player, col, row, nextCol, nextRow) || rookMove(board, player, col, row, nextCol, nextRow);
         default:
+
             return 0;
     }
 }
