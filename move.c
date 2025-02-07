@@ -102,7 +102,7 @@ _Bool whitePawnMove(Piece **board,int col,int row, int nextCol, int nextRow) {
 
     return 1;
 }
-_Bool blackPawnMove(Piece **board,_Bool player, int col, int row, int nextCol, int nextRow)  {
+_Bool blackPawnMove(Piece **board, int col, int row, int nextCol, int nextRow)  {
     if (isPiece(board, nextCol, nextRow) && isPieceWhite(board, nextCol, nextRow))
     {
         if (!(nextRow == row - 1 && (nextCol == col - 1 || nextCol == col + 1)))
@@ -286,7 +286,7 @@ _Bool isLegalMove(Piece **board, _Bool player, int col, int row, int nextCol, in
 
         case BLACK_PAWN:
 
-            return blackPawnMove(board, player, col, row, nextCol, nextRow);
+            return blackPawnMove(board, col, row, nextCol, nextRow);
 
         case WHITE_ROOK:
         case BLACK_ROOK:
