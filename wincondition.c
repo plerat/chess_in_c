@@ -1,8 +1,5 @@
 #include <stdlib.h>
 #include "wincondition.h"
-
-#include <stdio.h>
-
 #include "move.h"
 #include "piece.h"
 
@@ -32,7 +29,7 @@ _Bool isCaseSafe(_Bool color, Piece** board, int col, int row ){ // is case atta
     // check all ennemy piece then check if one of them can attack here
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
-                if (isLegalMove(board, color, i, j, col, row)) {
+                if (isLegalMove(board, !color, i, j, col, row)) {
                     return 0;
                 }
         }
@@ -78,8 +75,7 @@ _Bool canKnightMove(_Bool player, Piece** board, int col, int row) {
 
 _Bool canPieceMove(_Bool player, Piece** board, int col, int row) {
     if (getPiece(board,col,row) == WHITE_KNIGHT || getPiece(board,col,row) == BLACK_KNIGHT) {
-        _Bool test = canKnightMove(player, board, col, row);
-        return test;
+        return canKnightMove(player, board, col, row);
     }
     if (getPiece(board,col,row) == BLACK_KING || getPiece(board,col,row) == WHITE_KING) {
         return 0;
@@ -105,6 +101,7 @@ GameStatus checkWin(_Bool player, Piece** board) {
     if (king.col == -1 || king.row == -1) {
         return WINNING;
     }
+
     if (canKingMove(!player, board, king.col, king.row)) {
         return ONGOING;
     }
@@ -115,16 +112,16 @@ GameStatus checkWin(_Bool player, Piece** board) {
                 emptyCase++;
                 continue;
             }
-            printf( "\nplayer = %d ,%d\n", player,canPieceMove(!player,board,i,j) );
-            if (isEnemy(board,  player,i,j) && canPieceMove(!player,board,i,j)) {
-                return ONGOING;
-            }
             if (emptyCase == 62) {
                 return STALEMATE;
             }
+
+            if (isEnemy(board,  player,i,j) && canPieceMove(!player,board,i,j)) {
+                return ONGOING;
+            }
+            return STALEMATE;
         }
     }
-
    if (isCaseSafe(!player,board,king.col,king.row)) {
        return STALEMATE;
    }
