@@ -29,7 +29,8 @@ _Bool isCaseSafe(_Bool color, Piece** board, int col, int row ){ // is case atta
     // check all ennemy piece then check if one of them can attack here
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
-            if (isLegalMove(board, color, i, j, col, row)) {
+            // reverse color to check enemy move
+            if (isLegalMove(board, !color, i, j, col, row)) {
                 return 0;
             }
         }
@@ -79,7 +80,7 @@ _Bool canPieceMove(_Bool player, Piece** board, int col, int row) {
 
     }
     if (getPiece(board,col,row) == BLACK_KING || getPiece(board,col,row) == WHITE_KING) {
-        return 0;
+        return canKingMove(player, board, col, row);
     }
     for (int i = -1; i < 2; i++) {
         for (int j = -1; j < 2; j++) {
