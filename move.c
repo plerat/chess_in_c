@@ -54,13 +54,17 @@ int setCase(Piece **board, int col, int row, Piece piece) {
 }
 
 int promotingPiece(Piece **board, int col, int row) {
+    int piece = EMPTY;
+    int userInput = 0;
+    do {
     printf("Which piece do you want to replace your pawn ?\n 1 for Queen, 2 for Bishop, 3 for Knight, 4 for Rook : ");
-    int piece = scanf ("%d", &piece);
-    if (isPieceWhite(board, col, row)) {
-        piece = piece + 2;
-    } else {
-        piece = piece + 8;
-    }
+    scanf (" %d", &userInput);
+        if (isPieceWhite(board, col, row)) {
+            piece = userInput + 2;
+        } else {
+            piece = userInput + 8;
+        }
+    } while (userInput < 1 || userInput > 4);
     return piece;
 }
 
