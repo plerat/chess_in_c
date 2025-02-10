@@ -53,9 +53,24 @@ int setCase(Piece **board, int col, int row, Piece piece) {
     return aimedCase;
 }
 
+int promotingPiece(Piece **board, int col, int row) {
+    printf("Which piece do you want to replace your pawn ?\n 1 for Queen, 2 for Bishop, 3 for Knight, 4 for Rook : ");
+    int piece = scanf ("%d", &piece);
+    if (isPieceWhite(board, col, row)) {
+        piece = piece + 2;
+    } else {
+        piece = piece + 8;
+    }
+    return piece;
+}
+
+
 //   Piece movement
 int move(Piece **board, int col, int row, int nextCol, int nextRow) {
     Piece piece = getPiece(board, col, row);
+    if ((piece == WHITE_PAWN && nextRow == 7) || (piece == BLACK_PAWN && nextRow == 0)) {
+        piece = promotingPiece(board, col, row);
+    }
     setCase(board,col,row,EMPTY);
     return setCase(board, nextCol, nextRow, piece);
 }
