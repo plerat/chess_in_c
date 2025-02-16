@@ -25,12 +25,12 @@ Point findKing(_Bool color, Piece** board ) {
     return invalid;
 }
 
-_Bool isCaseSafe(_Bool color, Piece** board, int col, int row ){ // is case attacked
+_Bool isCaseSafe(_Bool color, LastMove LastMove, Piece** board, int col, int row ){ // is case attacked
     // check all ennemy piece then check if one of them can attack here
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             // reverse color to check enemy move
-            if (isLegalMove(board, !color, i, j, col, row)) {
+            if (isLegalMove(board, !color, LastMove, i, j, col, row)) {
                 return 0;
             }
         }
@@ -38,7 +38,7 @@ _Bool isCaseSafe(_Bool color, Piece** board, int col, int row ){ // is case atta
     return 1;
 }
 
-_Bool canKingMove(_Bool player, Piece** board, int col, int row) {
+_Bool canKingMove(_Bool player, LastMove LastMove, Piece** board, int col, int row) {
     for (int i = -1; i < 2; i++) {
         for (int j = -1; j < 2; j++) {
             if (col + i > 7 || row + j > 7 || col + i < 0 || row + j < 0) {
@@ -48,7 +48,7 @@ _Bool canKingMove(_Bool player, Piece** board, int col, int row) {
                 continue;
             }
             // if same color false if empty
-            if (isLegalMove(board, player, col, row , col + i, row + j ) && isCaseSafe(player, board, col + i, row + j)) {
+            if (isLegalMove(board, player, LastMove, col, row , col + i, row + j ) && isCaseSafe(player, LastMove, board, col + i, row + j)) {
             //if empty or enemy : check if case can be attacked
                 return 1;
             }
@@ -57,7 +57,7 @@ _Bool canKingMove(_Bool player, Piece** board, int col, int row) {
     return 0;
 }
 
-_Bool canKnightMove(_Bool player, Piece** board, int col, int row) {
+_Bool canKnightMove(_Bool player, LastMove LastMove, Piece** board, int col, int row) {
     for (int i= -2; i <= 2; i++) {
         for (int j= -2; j <= 2; j++) {
             if (col + i > 7 || row + j > 7 || col + i < 0 || row + j < 0) {
@@ -65,7 +65,7 @@ _Bool canKnightMove(_Bool player, Piece** board, int col, int row) {
             }
             if (abs(i)+abs(j) != 3) {
                 continue;
-            }if (isLegalMove(board, player, col, row, col + i, row + j)) {
+            }if (isLegalMove(board, player, LastMove, col, row, col + i, row + j)) {
                 return 1;
             }
         }
@@ -74,13 +74,13 @@ _Bool canKnightMove(_Bool player, Piece** board, int col, int row) {
 }
 
 
-_Bool canPieceMove(_Bool player, Piece** board, int col, int row) {
+_Bool canPieceMove(_Bool player, LastMove LastMove, Piece** board, int col, int row) {
     if (getPiece(board,col,row) == WHITE_KNIGHT || getPiece(board,col,row) == BLACK_KNIGHT) {
-        return canKnightMove(player, board, col, row);
+        return canKnightMove(player, LastMove, board, col, row);
 
     }
     if (getPiece(board,col,row) == BLACK_KING || getPiece(board,col,row) == WHITE_KING) {
-        return canKingMove(player, board, col, row);
+        return canKingMove(player, LastMove, board, col, row);
     }
     for (int i = -1; i < 2; i++) {
         for (int j = -1; j < 2; j++) {
@@ -91,20 +91,20 @@ _Bool canPieceMove(_Bool player, Piece** board, int col, int row) {
                 continue;
             }
 
-            return isLegalMove(board, player,  col, row, col + i, row + j);
+            return isLegalMove(board, player, LastMove, col, row, col + i, row + j);
         }
     }
     return 0;
 }
 
-GameStatus checkWin(_Bool player, Piece** board) {
+GameStatus checkWin(_Bool player, Piece** board, LastMove LastMove) {
     // On cherche le roi ennemi : donc on inverse la valeur de player (on est joueur blanc, on cherche le roi noir)
     Point king = findKing(!player, board);
     if (king.col == -1 || king.row == -1) {
         return WINNING;
     }
 
-    if (canKingMove(!player, board, king.col, king.row)) {
+    if (canKingMove(!player, LastMove, board, king.col, king.row)) {
         return ONGOING;
     }
     int emptyCase = 0;
@@ -114,7 +114,7 @@ GameStatus checkWin(_Bool player, Piece** board) {
                 emptyCase++;
                 continue;
             }
-            if (isEnemy(board,  player,i,j) && canPieceMove(!player,board,i,j)) {
+            if (isEnemy(board,  player,i,j) && canPieceMove(!player, LastMove, board,i,j)) {
                 return ONGOING;
             }
             if (emptyCase == 62) {
@@ -123,7 +123,7 @@ GameStatus checkWin(_Bool player, Piece** board) {
 
         }
     }
-   if (isCaseSafe(!player,board,king.col,king.row)) {
+   if (isCaseSafe(!player, LastMove, board,king.col,king.row)) {
        return STALEMATE;
    }
     return WINNING;

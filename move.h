@@ -11,13 +11,28 @@ typedef struct {
     int row;
 } Point;
 
+typedef struct {
+    Piece piece;
+    int col;
+    int row;
+    int nextRow;
+    int nextCol;
+} LastMove;
+
+typedef enum {
+    FALSE,
+    TRUE,
+    EN_PASSANT,
+} Move_type;
+
 Point askCoord();
 int* askCoords(int col, int row );
 int move(Piece **board, int col, int row, int nextCol, int nextRow);
+void setLastMove(LastMove *LastMove, Piece piece, int col, int row, int nextCol, int nextRow );
 _Bool isEnemy(Piece **board, _Bool color, int nextCol,int nextRow);
 _Bool isPiece(Piece** board, int col, int row);
 int getPiece(Piece** board, int col, int row);
 int setCase(Piece** board, int col, int row, Piece piece);
-_Bool isLegalMove(Piece** board,_Bool player, int col, int row, int nextCol, int nextRow);
+Move_type isLegalMove(Piece** board, _Bool player, LastMove LastMove, int col, int row, int nextCol, int nextRow);
 
 #endif // MOVE_H

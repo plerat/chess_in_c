@@ -76,7 +76,17 @@ int move(Piece **board, int col, int row, int nextCol, int nextRow) {
         piece = promotingPiece(board, col, row);
     }
     setCase(board,col,row,EMPTY);
-    return setCase(board, nextCol, nextRow, piece);
+    setCase(board, nextCol, nextRow, piece);
+    return piece;
+}
+
+void setLastMove(LastMove *LastMove, Piece piece, int col, int row, int nextCol, int nextRow ) {
+    LastMove->piece = piece;
+    LastMove->col = col;
+    LastMove->row = row;
+    LastMove->nextCol = nextCol;
+    LastMove->nextRow = nextRow;
+    printf("\n%d %d %d %d %d\n", LastMove->piece, LastMove->col, LastMove->row, LastMove->nextCol, LastMove->nextRow);
 }
 
 _Bool isEnemy(Piece **board,_Bool color, int nextCol,int nextRow) {
@@ -91,12 +101,24 @@ _Bool isEnemy(Piece **board,_Bool color, int nextCol,int nextRow) {
 }
 
 //      Check pieces movement function
-_Bool whitePawnMove(Piece **board,int col,int row, int nextCol, int nextRow) {
+Move_type whitePawnMove(Piece **board, LastMove LastMove, int col,int row, int nextCol, int nextRow) {
     if (isPiece(board, nextCol, nextRow) && isPieceBlack(board, nextCol, nextRow)) {
         if (!(nextRow == row + 1 && (nextCol == col + 1 || nextCol == col - 1))) {
             return 0;
         }
         return 1;
+    }
+
+    // special case : en passant
+    if (LastMove.piece == BLACK_PAWN && ( LastMove.row - row == 2) && nextCol == LastMove.nextCol) {
+        // is left ?
+        if (col - 1 == LastMove.nextCol && col - 1 >= 0) {
+            return 2;
+        }
+        // is right ?
+        if (col + 1 == LastMove.nextCol && col + 1 <= 7) {
+            return 2;
+        }
     }
 
     if (col != nextCol) {
@@ -120,7 +142,8 @@ _Bool whitePawnMove(Piece **board,int col,int row, int nextCol, int nextRow) {
 
     return 1;
 }
-_Bool blackPawnMove(Piece **board, int col, int row, int nextCol, int nextRow)  {
+
+Move_type blackPawnMove(Piece **board, LastMove LastMove, int col, int row, int nextCol, int nextRow)  {
     if (isPiece(board, nextCol, nextRow) && isPieceWhite(board, nextCol, nextRow))
     {
         if (!(nextRow == row - 1 && (nextCol == col - 1 || nextCol == col + 1)))
@@ -129,6 +152,19 @@ _Bool blackPawnMove(Piece **board, int col, int row, int nextCol, int nextRow)  
         }
         return 1;
     }
+
+    // special case : en passant
+    if (LastMove.piece == WHITE_PAWN && (row - LastMove.row == 2) && nextCol == LastMove.nextCol) {
+        // is left ?
+        if (col - 1 == LastMove.nextCol && col - 1 >= 0) {
+            return 2;
+        }
+        // is right ?
+        if (col + 1 == LastMove.nextCol && col + 1 <= 7) {
+            return 2;
+        }
+    }
+
     if (col != nextCol)
     {
         return 0;
@@ -293,7 +329,7 @@ _Bool kingMove(Piece** board, _Bool player, int col, int row, int nextCol, int n
     return 1;
 }
 
-_Bool isLegalMove(Piece **board, _Bool player, int col, int row, int nextCol, int nextRow) {
+Move_type isLegalMove(Piece **board, _Bool player, LastMove LastMove, int col, int row, int nextCol, int nextRow) {
 
     if (col > 7 || row > 7 || col < 0 || row < 0) {
        return 0;
@@ -307,11 +343,11 @@ _Bool isLegalMove(Piece **board, _Bool player, int col, int row, int nextCol, in
 
         case WHITE_PAWN:
 
-            return whitePawnMove(board, col, row, nextCol, nextRow);
+            return whitePawnMove(board, LastMove, col, row, nextCol, nextRow);
 
         case BLACK_PAWN:
 
-            return blackPawnMove(board, col, row, nextCol, nextRow);
+            return blackPawnMove(board, LastMove, col, row, nextCol, nextRow);
 
         case WHITE_ROOK:
         case BLACK_ROOK:

@@ -12,9 +12,9 @@ typedef enum  {
     STALEMATE
 } GameStatus;
 Point findKing(_Bool color, Piece** board );
-_Bool isCaseSafe(_Bool player, Piece** board, int col, int row);
-_Bool canKingMove(_Bool player, Piece** board, int col, int row);
-_Bool canKnightMove(_Bool player, Piece** board, int col, int row);
-_Bool canPieceMove(_Bool player, Piece** board, int col, int row);
-GameStatus checkWin(_Bool player, Piece** board);
+_Bool isCaseSafe(_Bool player, LastMove LastMove, Piece** board, int col, int row);
+_Bool canKingMove(_Bool player, LastMove LastMove, Piece** board, int col, int row);
+_Bool canKnightMove(_Bool player, LastMove LastMove, Piece** board, int col, int row);
+_Bool canPieceMove(_Bool player, LastMove LastMove, Piece** board, int col, int row);
+GameStatus checkWin(_Bool player, Piece** board, LastMove LastMove);
 #endif //WINCONDITION_H
