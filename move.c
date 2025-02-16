@@ -86,7 +86,6 @@ void setLastMove(LastMove *LastMove, Piece piece, int col, int row, int nextCol,
     LastMove->row = row;
     LastMove->nextCol = nextCol;
     LastMove->nextRow = nextRow;
-    printf("\n%d %d %d %d %d\n", LastMove->piece, LastMove->col, LastMove->row, LastMove->nextCol, LastMove->nextRow);
 }
 
 _Bool isEnemy(Piece **board,_Bool color, int nextCol,int nextRow) {
