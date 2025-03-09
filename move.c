@@ -5,6 +5,35 @@
 #include "piece.h"
 #include <stdio.h>
 
+#include "wincondition.h"
+_Bool whiteKingHasMoved;
+_Bool blackKingHasMoved;
+_Bool rightWhiteRookHasMoved;
+_Bool leftWhiteRookHasMoved;
+_Bool rightBlackRookHasMoved;
+_Bool leftBlackRookHasMoved;
+
+void updatePieceHasMoved(Piece piece, int col, int row) {
+    if (whiteKingHasMoved != 1 && piece == WHITE_KING) {
+        whiteKingHasMoved = 1;
+    }
+    if (blackKingHasMoved != 1 && piece == BLACK_KING) {
+        blackKingHasMoved = 1;
+    }
+    if ((piece == WHITE_ROOK) && (col == 0) && (row == 0)) {
+        leftWhiteRookHasMoved = 1;
+    }
+    if ((piece == WHITE_ROOK) && (col == 7) && (row == 0)) {
+        rightWhiteRookHasMoved = 1;
+    }
+    if ((piece == BLACK_ROOK) && (col == 0) && (row == 7)) {
+        leftBlackRookHasMoved = 1;
+    }
+    if ((piece == BLACK_ROOK) && (col == 7) && (row == 7)) {
+        rightBlackRookHasMoved = 1;
+    }
+}
+
 Point askCoord() {
     int row = 0;
     char col = 0;
@@ -316,7 +345,58 @@ _Bool knightMove(Piece** board, _Bool player, int col, int row, int nextCol, int
 
     return 0;
 }
-_Bool kingMove(Piece** board, _Bool player, int col, int row, int nextCol, int nextRow){
+
+_Bool longCastling(Piece** board, _Bool player, LastMove last_move, int col, int row, int nextCol) {
+        for (int i = col - 1 ; i >= nextCol - 1 ; i--) {
+            // Check if cases between left rook and king are empty
+            if (isPiece(board, i, row)) {
+                return 0;
+            }
+        }
+        // Check if cases between left rook and king are safe
+        for (int j = col - 1 ; j >= nextCol; j--) {
+            if (!isCaseSafe(player, last_move, board, j, row)) {
+                printf("case not safe");
+                return 0;
+            }
+        }
+    return 1;
+    }
+
+_Bool shortCastling(Piece** board, _Bool player, LastMove last_move, int col, int row, int nextCol) {
+    // Check if cases between right rook and king are empty
+    for (int i = col + 1 ; i <= nextCol; i++) {
+        if (isPiece(board, i, row)) {
+            return 0;
+        }
+    }
+    // Check if cases between right rook and king are safe
+    for (int j = col + 1 ; j <= nextCol; j++) {
+        if (!isCaseSafe(player, last_move, board, j, row)) {
+            printf("case not safe");
+            return 0;
+        }
+    }
+    return 1;
+}
+
+Move_type kingMove(Piece** board, _Bool player, LastMove last_move, int col, int row, int nextCol, int nextRow){
+    // Long castling (queen castling)
+    if (nextCol == col - 2 && nextRow == row && ((player == 1 && whiteKingHasMoved == 0 && leftWhiteRookHasMoved == 0) || (player == 0 && blackKingHasMoved == 0 && leftBlackRookHasMoved == 0))) {
+        if (longCastling(board, player, last_move, col, row, nextCol)) {
+            return 3;
+        }
+        return 0;
+    }
+
+    // Short castling
+    if (nextCol == col + 2 && nextRow == row && ((player == 1 && whiteKingHasMoved == 0 && rightWhiteRookHasMoved == 0) || (player == 0 && blackKingHasMoved == 0 && rightBlackRookHasMoved == 0))) {
+        if (shortCastling(board, player, last_move, col, row, nextCol)) {
+            return 4;
+        }
+        return 0;
+    }
+
     if (!isEnemy(board, player, nextCol, nextRow)) {
         return 0;
     }
@@ -366,7 +446,7 @@ Move_type isLegalMove(Piece **board, _Bool player, LastMove LastMove, int col, i
         case WHITE_KING:
         case BLACK_KING:
 
-        return kingMove(board, player, col, row, nextCol, nextRow);
+        return kingMove(board, player, LastMove, col, row, nextCol, nextRow);
 
         case WHITE_QUEEN:
         case BLACK_QUEEN:

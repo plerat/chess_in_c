@@ -64,8 +64,10 @@ void displayBoard(Piece **board) {
 void resetBoardPiece(Piece **board) {
     // Just placing at right position all pieces
     for (Column i = A; i <= H; i++) {
+
         placePiece(board, i, 7, BLACK_PAWN);
         placePiece(board, i, 2, WHITE_PAWN);
+
     }
 
     placePiece(board, A, 1, WHITE_ROOK);
@@ -75,7 +77,6 @@ void resetBoardPiece(Piece **board) {
 
     placePiece(board, B, 1, WHITE_KNIGHT);
     placePiece(board, G, 1, WHITE_KNIGHT);
-
     placePiece(board, B, 8, BLACK_KNIGHT);
     placePiece(board, G, 8, BLACK_KNIGHT);
 

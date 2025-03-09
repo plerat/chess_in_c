@@ -23,9 +23,12 @@ typedef enum {
     FALSE,
     TRUE,
     EN_PASSANT,
+    LONG_CASTLING,
+    SHORT_CASTLING,
 } Move_type;
 
 Point askCoord();
+void updatePieceHasMoved(Piece piece, int col, int row);
 int* askCoords(int col, int row );
 int move(Piece **board, int col, int row, int nextCol, int nextRow);
 void setLastMove(LastMove *LastMove, Piece piece, int col, int row, int nextCol, int nextRow );
