@@ -104,6 +104,10 @@ int move(Piece **board, int col, int row, int nextCol, int nextRow) {
     if ((piece == WHITE_PAWN && nextRow == 7) || (piece == BLACK_PAWN && nextRow == 0)) {
         piece = promotingPiece(board, col, row);
     }
+    // update if king and rook moved for the first time, use in castling function
+    else if (piece == BLACK_KING || piece == WHITE_KING || piece == WHITE_ROOK || piece == BLACK_ROOK) {
+        updatePieceHasMoved(piece, col, row);
+    }
     setCase(board,col,row,EMPTY);
     setCase(board, nextCol, nextRow, piece);
     return piece;

@@ -30,7 +30,6 @@ int main() {
             } else {
                 Piece pieceMoved = move(board, coord.col, coord.row, nextCoord.col, nextCoord.row);
                 haveMoveAPiece = 1;
-                updatePieceHasMoved(pieceMoved, coord.col, coord.row);
                 if (legalMove == EN_PASSANT) {
                     printf("En passant\n");
                     setCase(board, LastMove.nextCol, LastMove.nextRow, EMPTY);
