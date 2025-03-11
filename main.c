@@ -10,12 +10,14 @@ int main() {
     Piece **board = generateEmptyBoard();
     resetBoardPiece(board);
     displayBoard(board);
+    // initialization of LastMove struct used in "en passant" move
     LastMove LastMove;
     setLastMove(&LastMove,EMPTY, 0, 0, 0, 0);
 
     _Bool player = 0;
     GameStatus status = ONGOING;
     while (status == ONGOING) {
+        // reverse player because white always start
         player = !player;
         _Bool haveMoveAPiece = 0;
         while (!haveMoveAPiece) {
@@ -32,14 +34,17 @@ int main() {
                 haveMoveAPiece = 1;
                 if (legalMove == EN_PASSANT) {
                     printf("En passant\n");
+                    // Empty the case where was the taken pawn
                     setCase(board, LastMove.nextCol, LastMove.nextRow, EMPTY);
                 }
                 if (legalMove == LONG_CASTLING) {
                     printf("Long castling\n");
+                    // move left rook after the king move
                     move(board,nextCoord.col - 2 , coord.row,nextCoord.col + 1, coord.row);
                 }
                 if (legalMove == SHORT_CASTLING) {
                     printf("Short castling\n");
+                    // move right rook after the king move
                     move(board, nextCoord.col + 1, coord.row,nextCoord.col - 1, coord.row);
                 }
                 setLastMove(&LastMove, pieceMoved, coord.col, coord.row, nextCoord.col, nextCoord.row);

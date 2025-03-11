@@ -35,7 +35,7 @@ void setLastMove(LastMove *LastMove, Piece piece, int col, int row, int nextCol,
 _Bool isEnemy(Piece **board, _Bool color, int nextCol,int nextRow);
 _Bool isPiece(Piece** board, int col, int row);
 int getPiece(Piece** board, int col, int row);
-int setCase(Piece** board, int col, int row, Piece piece);
+void setCase(Piece** board, int col, int row, Piece piece);
 Move_type isLegalMove(Piece** board, _Bool player, LastMove LastMove, int col, int row, int nextCol, int nextRow);
 
 #endif // MOVE_H

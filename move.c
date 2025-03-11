@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #include "wincondition.h"
+// Global var to check if castling is available / legalmove
 _Bool whiteKingHasMoved;
 _Bool blackKingHasMoved;
 _Bool rightWhiteRookHasMoved;
@@ -37,13 +38,17 @@ void updatePieceHasMoved(Piece piece, int col, int row) {
 Point askCoord() {
     int row = 0;
     char col = 0;
-    scanf(" %c%d", &col, &row); // magie du scanf numéro 1: ' ' avant %c pour ignorer les retours à la ligne '\n'
-    // while (getchar() != '\n'); // magie du scanf numéro 2: vide le buffer s'il contient des résidues
+    // before %c need to add a space to ignore cartdrige return \n
+    scanf(" %c%d", &col, &row);
+    // row - 1 because the board start at 0
     Point coord = { col, row-1};
-    if (coord.col < 97) coord.col += 32;
+    // format user input after the cast in the struct
+    if (coord.col < 97) {
+        coord.col += 32;
+    }
     coord.col = coord.col % 97;
     while (!(coord.col <8 && coord.col >=0  && coord.row <=8 &&  coord.row >= 0 )) {
-        printf("\n coordonnée invalide, veuillez réessayer\n");
+        printf("\nInvalid coordinate, retry please\n");
         coord = askCoord();
     }
     return coord;
@@ -54,9 +59,10 @@ _Bool isPiece(Piece **board, int col, int row) {
 }
 
 int getPiece(Piece **board, int col, int row) {
-    if (col > 7 || row > 7 || col < 0 || row < 0) {
+    /*if (col > 7 || row > 7 || col < 0 || row < 0) {
+        printf("Should never appear : coordinate out of board");
         return 15;
-    }
+    }*/
     return board[col][row];
 }
 
@@ -76,10 +82,8 @@ _Bool isPieceBlack(Piece **board, int nextCol, int nextRow) {
     }
 }
 
-int setCase(Piece **board, int col, int row, Piece piece) {
-    int aimedCase = getPiece(board, col, row);
+void setCase(Piece **board, int col, int row, Piece piece) {
     board[col][row] = piece;
-    return aimedCase;
 }
 
 int promotingPiece(Piece **board, int col, int row) {
@@ -89,8 +93,10 @@ int promotingPiece(Piece **board, int col, int row) {
     printf("Which piece do you want to replace your pawn ?\n 1 for Queen, 2 for Bishop, 3 for Knight, 4 for Rook : ");
     scanf (" %d", &userInput);
         if (isPieceWhite(board, col, row)) {
+            // + 2 to match the white pieces in enum
             piece = userInput + 2;
         } else {
+            // + 8 to match the black pieces in enum
             piece = userInput + 8;
         }
     } while (userInput < 1 || userInput > 4);
@@ -101,6 +107,7 @@ int promotingPiece(Piece **board, int col, int row) {
 //   Piece movement
 int move(Piece **board, int col, int row, int nextCol, int nextRow) {
     Piece piece = getPiece(board, col, row);
+    // piece promotion
     if ((piece == WHITE_PAWN && nextRow == 7) || (piece == BLACK_PAWN && nextRow == 0)) {
         piece = promotingPiece(board, col, row);
     }
@@ -113,6 +120,7 @@ int move(Piece **board, int col, int row, int nextCol, int nextRow) {
     return piece;
 }
 
+// use for "en passant"
 void setLastMove(LastMove *LastMove, Piece piece, int col, int row, int nextCol, int nextRow ) {
     LastMove->piece = piece;
     LastMove->col = col;
@@ -122,19 +130,18 @@ void setLastMove(LastMove *LastMove, Piece piece, int col, int row, int nextCol,
 }
 
 _Bool isEnemy(Piece **board,_Bool color, int nextCol,int nextRow) {
-    if (color && isPieceWhite(board, nextCol, nextRow)) {
+    if (color == 1 && isPieceWhite(board, nextCol, nextRow)) {
         return 0;
     }
-    //!color because if not : black player is 0 so 0 && 1 == 0
-    if (!color && isPieceBlack(board, nextCol, nextRow)) {
+    if (color == 0 && isPieceBlack(board, nextCol, nextRow)) {
         return 0;
     }
     return 1;
 }
-
-//      Check pieces movement function
+// Legalmove for whitepawn
 Move_type whitePawnMove(Piece **board, LastMove LastMove, int col,int row, int nextCol, int nextRow) {
     if (isPiece(board, nextCol, nextRow) && isPieceBlack(board, nextCol, nextRow)) {
+        // if is enemy and we don't move diagonally, return false
         if (!(nextRow == row + 1 && (nextCol == col + 1 || nextCol == col - 1))) {
             return 0;
         }
@@ -178,6 +185,7 @@ Move_type whitePawnMove(Piece **board, LastMove LastMove, int col,int row, int n
 Move_type blackPawnMove(Piece **board, LastMove LastMove, int col, int row, int nextCol, int nextRow)  {
     if (isPiece(board, nextCol, nextRow) && isPieceWhite(board, nextCol, nextRow))
     {
+        // if is enemy and we don't move diagonally, return false
         if (!(nextRow == row - 1 && (nextCol == col - 1 || nextCol == col + 1)))
         {
             return 0;
@@ -222,38 +230,42 @@ _Bool bishopMove(Piece** board,_Bool player,  int col, int row, int nextCol, int
     if (!isEnemy(board, player, nextCol, nextRow)) {
         return 0;
     }
-
-    if (row == nextRow || col == nextCol) { //if move as rook or stay still
+    //if move as rook or stay still
+    if (row == nextRow || col == nextCol) {
         return 0;
     }
-    if (!(row - nextRow == col - nextCol || row - nextRow == -(col-nextCol))) { //if not diagonal
+    //if not diagonal
+    if (!(row - nextRow == col - nextCol || row - nextRow == -(col-nextCol))) {
         return 0;
     }
     //i = 1 to skip itself and -1 to not check the aimed case
-    if (row > nextRow && col > nextCol) { //diagonal down left
+    // diagonal down left
+    if (row > nextRow && col > nextCol) {
         for (int i = 1 ; i < row-nextRow -1 ; i++) {
             if (isPiece(board, col-i, row-i) != EMPTY) {
                 return 0;
             }
         }
     }
-    if (row > nextRow && col < nextCol) { //diagonal down right
+    //diagonal down right
+    if (row > nextRow && col < nextCol) {
         for (int i = 1 ; i < row-nextRow -1; i++) {
             if (isPiece(board, col+i, row-i) != EMPTY) {
                 return 0;
             }
         }
     }
-    if (row < nextRow && col > nextCol) { //diagonal up left
+    //diagonal up left
+    if (row < nextRow && col > nextCol) {
         for (int i = 1 ; i < nextRow-row -1 ; i++) {
             if (isPiece(board, col-i, row+i) != EMPTY) {
                 return 0;
             }
         }
     }
-    if (row < nextRow && col < nextCol) { //diagonal up right
+    //diagonal up right
+    if (row < nextRow && col < nextCol) {
         for (int i = 1 ; i < nextRow - row - 1 ; i++) {
-
             if (isPiece(board, col + i, row + i) != EMPTY) {
                 return 0;
             }
@@ -262,17 +274,16 @@ _Bool bishopMove(Piece** board,_Bool player,  int col, int row, int nextCol, int
 
     return 1;
 }
+
 _Bool rookMove(Piece** board, _Bool player, int col, int row, int nextCol, int nextRow) {
         if (!isEnemy(board, player, nextCol, nextRow)) {
             return 0;
         }
-
         // vertical asc
         if (row < nextRow && col == nextCol) {
-
-            // - 1 pour ne pas check la case d'arrivée car ça a déjà été fait
-            for (; row < nextRow -1; row++) {
-                // Ajout de row + 1 pour que la pièce ne se check pas elle-même
+            // - 1 to not check the aimed case (already done)
+            for (; row < nextRow - 1; row++) {
+                // row + 1 to don't check herself
                 if (isPiece(board, col, row + 1)) {
                     return 0;
                 }
@@ -345,8 +356,6 @@ _Bool knightMove(Piece** board, _Bool player, int col, int row, int nextCol, int
     if (col - 1 == nextCol && row + 2 == nextRow) {
         return 1;
     }
-
-
     return 0;
 }
 
@@ -388,7 +397,7 @@ Move_type kingMove(Piece** board, _Bool player, LastMove last_move, int col, int
     // Long castling (queen castling)
     if (nextCol == col - 2 && nextRow == row && ((player == 1 && whiteKingHasMoved == 0 && leftWhiteRookHasMoved == 0) || (player == 0 && blackKingHasMoved == 0 && leftBlackRookHasMoved == 0))) {
         if (longCastling(board, player, last_move, col, row, nextCol)) {
-            return 3;
+            return LONG_CASTLING;
         }
         return 0;
     }
@@ -396,7 +405,7 @@ Move_type kingMove(Piece** board, _Bool player, LastMove last_move, int col, int
     // Short castling
     if (nextCol == col + 2 && nextRow == row && ((player == 1 && whiteKingHasMoved == 0 && rightWhiteRookHasMoved == 0) || (player == 0 && blackKingHasMoved == 0 && rightBlackRookHasMoved == 0))) {
         if (shortCastling(board, player, last_move, col, row, nextCol)) {
-            return 4;
+            return SHORT_CASTLING;
         }
         return 0;
     }
@@ -408,7 +417,6 @@ Move_type kingMove(Piece** board, _Bool player, LastMove last_move, int col, int
     if (!((-1 <= col - nextCol && col - nextCol <= 1 ) && (- 1 <= row - nextRow && row - nextRow <= 1))) {
         return 0;
     }
-
     return 1;
 }
 
