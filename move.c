@@ -353,8 +353,8 @@ _Bool longCastling(Piece** board, _Bool player, LastMove last_move, int col, int
                 return 0;
             }
         }
-        // Check if cases between left rook and king are safe
-        for (int j = col - 1 ; j >= nextCol; j--) {
+        // Check if cases on the path's king are safe
+        for (int j = col; j >= nextCol; j--) {
             if (!isCaseSafe(player, last_move, board, j, row)) {
                 printf("case not safe");
                 return 0;
@@ -370,8 +370,8 @@ _Bool shortCastling(Piece** board, _Bool player, LastMove last_move, int col, in
             return 0;
         }
     }
-    // Check if cases between right rook and king are safe
-    for (int j = col + 1 ; j <= nextCol; j++) {
+    // Check if cases on the path's king are safe
+    for (int j = col ; j <= nextCol; j++) {
         if (!isCaseSafe(player, last_move, board, j, row)) {
             printf("case not safe");
             return 0;

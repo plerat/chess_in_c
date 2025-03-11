@@ -85,6 +85,7 @@ void resetBoardPiece(Piece **board) {
     placePiece(board, C, 1, WHITE_BISHOP);
     placePiece(board, F, 1, WHITE_BISHOP);
 
+
     placePiece(board, D, 8, BLACK_QUEEN);
     placePiece(board, E, 8, BLACK_KING);
     placePiece(board, D, 1, WHITE_QUEEN);
