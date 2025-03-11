@@ -20,16 +20,16 @@ void updatePieceHasMoved(Piece piece, int col, int row) {
     if (blackKingHasMoved != 1 && piece == BLACK_KING) {
         blackKingHasMoved = 1;
     }
-    if ((piece == WHITE_ROOK) && (col == 0) && (row == 0)) {
+    if (leftWhiteRookHasMoved != 1 && (piece == WHITE_ROOK) && (col == 0) && (row == 0)) {
         leftWhiteRookHasMoved = 1;
     }
-    if ((piece == WHITE_ROOK) && (col == 7) && (row == 0)) {
+    if (rightWhiteRookHasMoved !=1 && (piece == WHITE_ROOK) && (col == 7) && (row == 0)) {
         rightWhiteRookHasMoved = 1;
     }
-    if ((piece == BLACK_ROOK) && (col == 0) && (row == 7)) {
+    if (leftBlackRookHasMoved != 1 && (piece == BLACK_ROOK) && (col == 0) && (row == 7)) {
         leftBlackRookHasMoved = 1;
     }
-    if ((piece == BLACK_ROOK) && (col == 7) && (row == 7)) {
+    if (rightBlackRookHasMoved != 1 && (piece == BLACK_ROOK) && (col == 7) && (row == 7)) {
         rightBlackRookHasMoved = 1;
     }
 }
