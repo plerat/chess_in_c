@@ -19,7 +19,8 @@ int main() {
         player = !player;
         _Bool haveMoveAPiece = 0;
         while (!haveMoveAPiece) {
-            printf("piece to move !\n");
+            printf("player %s turn\n",player ? "white" : "black");
+            printf("piece to move : \n");
             Point coord = askCoord();
             printf("where ?\n");
             Point nextCoord = askCoord();
@@ -35,24 +36,12 @@ int main() {
                     setCase(board, LastMove.nextCol, LastMove.nextRow, EMPTY);
                 }
                 if (legalMove == LONG_CASTLING) {
-                   printf("Long castling\n");
-                    if (pieceMoved == WHITE_KING) {
-                        setCase(board, nextCoord.col + 1, coord.row, WHITE_ROOK);
-                    }
-                    if (pieceMoved == BLACK_KING) {
-                        setCase(board, nextCoord.col + 1, coord.row, BLACK_ROOK);
-                    }
-                    setCase(board, nextCoord.col - 2 , coord.row, EMPTY);
+                    printf("Long castling\n");
+                    move(board,nextCoord.col - 2 , coord.row,nextCoord.col + 1, coord.row);
                 }
                 if (legalMove == SHORT_CASTLING) {
                     printf("Short castling\n");
-                    if (pieceMoved == WHITE_KING) {
-                        setCase(board, nextCoord.col - 1, coord.row, WHITE_ROOK);
-                    }
-                    if (pieceMoved == BLACK_KING) {
-                        setCase(board, nextCoord.col - 1, coord.row, BLACK_ROOK);
-                    }
-                    setCase(board, nextCoord.col + 1, coord.row, EMPTY);
+                    move(board, nextCoord.col + 1, coord.row,nextCoord.col - 1, coord.row);
                 }
                 setLastMove(&LastMove, pieceMoved, coord.col, coord.row, nextCoord.col, nextCoord.row);
             }
@@ -70,5 +59,7 @@ int main() {
     }
     return 0;
 }
+
+
 
 
