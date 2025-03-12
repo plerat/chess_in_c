@@ -59,10 +59,6 @@ _Bool isPiece(Piece **board, int col, int row) {
 }
 
 int getPiece(Piece **board, int col, int row) {
-    /*if (col > 7 || row > 7 || col < 0 || row < 0) {
-        printf("Should never appear : coordinate out of board");
-        return 15;
-    }*/
     return board[col][row];
 }
 
